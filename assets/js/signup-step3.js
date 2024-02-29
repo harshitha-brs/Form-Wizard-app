@@ -106,30 +106,35 @@ function textValidation() {
 
 function validateForm(e) {
   e.preventDefault();
-
   const address = document.getElementById("address");
-  const inputValue = address.value.trim();
   const maxLength = 60;
   const warnLength = 10;
   const charCount = document.getElementById("charCount");
   charCount.textContent = `${maxLength}/${maxLength}`;
-
   address.addEventListener("input", function() {
-    const remainingChars = maxLength - address.value.length;
-
-    if (remainingChars <= warnLength) {
+    const inputValue = address.value.trim();
+    const remainingChars = maxLength - inputValue.length;
+    const containsSpecialChars = /[^\w]/.test(inputValue);
+    if (remainingChars <= warnLength && !containsSpecialChars) {
       charCount.classList.add("text-danger");
     } else {
       charCount.classList.remove("text-danger");
     }
-    if (remainingChars <= "") {
-      address.value = address.value.slice(0, maxLength);
+    if (inputValue.length > maxLength) {
+      address.value = inputValue.slice(0, maxLength);
     }
-
-    charCount.textContent = `${Math.max(remainingChars, "")}/${maxLength}`;
+    charCount.textContent = `${Math.max(remainingChars, 0)}/${maxLength}`;
+    if (inputValue.length === maxLength) {
+      // Redirect to the next page
+      window.location.href = "thankyou.html";
+    }
+    if (inputValue.length === maxLength) {
+      address.classList.add("black-text");
+    } else {
+      address.classList.remove("black-text");
+    }
   });
 }
-
 const address = document.getElementById("address");
 address.addEventListener("input", function() {
   textValidation();
